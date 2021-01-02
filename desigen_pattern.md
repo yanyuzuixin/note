@@ -53,3 +53,117 @@ Interface1有5个方法，类A只用到1.2.3方法，类C只用到1.4.5方法，
 
 ![image-20210102150937372](/usr1/Study/notes/assets/image-20210102150937372.png)
 
+### 依赖倒转原则
+
+#### 基本介绍
+
+1. 高层模块不应该依赖低层模块，二者都应该依赖其抽象
+2. 抽象不应该依赖细节，细节应该依赖抽象
+3. 依赖倒转的中心思想是面向接口编程
+4. 依赖倒转原则是基于这样的理念：相对于细节的多变性，抽象的东西要稳定的多。以抽象为基础搭建的架构比以细节为基础搭建的架构要稳定的多。在java中，抽象指的是借口或抽象类，细节就是具体的实现类
+5. 使用接口或抽象类的目的是制定好规范，而不涉及任何具体的操作，把展现细节的任务交给他们的实现类去完成
+
+#### 应用实例
+
+todo：要根据代码实现画图
+
+#### 依赖关系传递的三种方式和应用案例
+
+##### 1 接口传递
+
+```java
+// 开关的接口
+interface IOpenAndClose {
+    public void open(ITV itv); // 抽象方法，依赖ITV接口
+}
+
+interface ITV {
+    public void play();
+}
+
+class ChangHong implements ITV {
+    @Override
+    public void play() {
+        System.out.println("长虹电视 打开");
+    }
+}
+
+// 实现接口
+class OpenAndClose implements IOpenAndClose {
+    @Override
+    public void open(ITV itv) {
+        itv.play();
+    }
+}
+```
+
+##### 2 构造方法传递
+
+```java
+interface IOpenAndClose {
+    public void open();
+}
+
+interface ITV {
+    public void play();
+}
+
+class ChangHong implements ITV {
+    @Override
+    public void play() {
+        System.out.println("长虹电视 打开");
+    }
+}
+
+class OpenAndClose implements IOpenAndClose {
+    public ITV tv;
+    public OpenAndClose(ITV tv) {
+        this.tv = tv;
+    }
+
+    @Override
+    public void open() {
+        this.tv.play();
+    }
+}
+```
+
+##### 3 setter方式传递
+
+```java
+interface IOpenAndClose {
+    public void open();
+    public void setTv(ITV tv);
+}
+
+interface ITV {
+    public void play();
+}
+
+class ChangHong implements ITV {
+    @Override
+    public void play() {
+        System.out.println("长虹电视 打开");
+    }
+}
+
+class OpenAndClose implements IOpenAndClose {
+    private ITV tv;
+
+    @Override
+    public void setTv(ITV tv) {
+        this.tv = tv;
+    }
+
+    @Override
+    public void open() {
+        this.tv.play();
+    }
+}
+```
+
+#### 依赖倒转原则的注意事项和细节
+
+1. 底层模块尽量都要有抽象类和接口，或者两者都有，程序稳定性更好
+2. 变量的声明类型尽量是抽象类或接口，这样我们的变量引用和实际对象间，就存在一个缓冲层，利于程序扩展和优化
+3. 继承时遵循里氏替换原则
