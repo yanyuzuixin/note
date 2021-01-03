@@ -43,6 +43,25 @@ Interface1有5个方法，类A只用到1.2.3方法，类C只用到1.4.5方法，
 
 ![image-20210102150248033](./assets/image-20210102150248033.png)
 
+```mermaid
+classDiagram
+class Interface1 {
+	+operation1()
+	+operation2()
+	+operation3()
+	+operation4()
+	+operation5()
+}
+<<interface>> Interface1
+
+B ..|> Interface1
+D ..|> Interface1
+Interface1 <.. A
+Interface1 <.. C
+```
+
+
+
 ##### 分析
 
 类A通过接口Interface1依赖类B，类C通过接口Interface1依赖类D，如果接口Interface1对于类A和类C来说不是最小接口，那么类B和类D必须要去实现他们不需要的方法，违背了接口隔离原则
@@ -52,6 +71,36 @@ Interface1有5个方法，类A只用到1.2.3方法，类C只用到1.4.5方法，
 将接口Interface1拆分为几个独立的接口，类A和类C分别与他们需要的接口建立依赖关系，如下图：
 
 ![image-20210102150937372](./assets/image-20210102150937372.png)
+
+```mermaid
+classDiagram
+class Interface1 {
+	<<interface>>
+	+operation1()
+}
+class Interface2 {
+	<<interface>>
+	+operation2()
+	+operation3()
+}
+class Interface3 {
+	<<interface>>
+	+operation4()
+	+operation5()
+}
+B ..|> Interface1
+B ..|> Interface2
+D ..|> Interface1
+D ..|> Interface3
+Interface1 <.. A
+Interface2 <.. A
+Interface1 <.. C
+Interface3 <.. C
+```
+
+
+
+
 
 ### 依赖倒转原则
 
